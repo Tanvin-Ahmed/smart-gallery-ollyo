@@ -26,15 +26,41 @@ const DisplayImage = () => {
     });
   };
 
-  const handleDragStart = (e: React.DragEvent, data: ImageDataType) => {
-    if (e.dataTransfer) {
-      // save selected image data
-      e.dataTransfer.setData("imageId", data.id);
-      setDraggedImage(data);
-    }
+  const handleDragStart = (data: ImageDataType) => {
+    setDraggedImage(data);
   };
 
   const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    if (!draggedImage) return;
+
+    if (id !== draggedImage.id) {
+      // if selected image is dragged over another image position
+      setImages((pre: ImageDataType[]) => {
+        const images = [...pre];
+        const draggedIndex = images.findIndex(
+          (img) => img.id === draggedImage.id
+        );
+        const dropIndex = images.findIndex((img) => img.id === id);
+
+        // Remove the dragged image from the list
+        images.splice(draggedIndex, 1);
+
+        // Add the updated dragged image back at the new position
+        images.splice(dropIndex, 0, draggedImage);
+
+        return images;
+      });
+    }
+  };
+
+  // for mobile devices
+  const handleTouchStart = (data: ImageDataType) => {
+    // save selected image data
+    setDraggedImage(data);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent, id: string) => {
     e.preventDefault();
     if (!draggedImage) return;
 
@@ -69,27 +95,27 @@ const DisplayImage = () => {
             img.url === "" && "scale-105 shadow-lg"
           }`}
           onDragOver={(e) => handleDragOver(e, img.id)}
+          onTouchStart={() => handleTouchStart(img)}
+          onTouchMove={(e) => handleTouchMove(e, img.id)}
         >
-          {img.url && (
-            <div
-              className="w-full h-full rounded"
-              draggable
-              onDragStart={(e) => handleDragStart(e, img)}
-            >
-              <Overlay
-                handleSelectImage={handleSelectImage}
-                id={img.id}
-                selectedImages={selectedImages}
-              />
-              <Image
-                src={img.url}
-                alt={`${index + 1} img`}
-                height={"100%"}
-                width={"100%"}
-                className="rounded cursor-pointer w-full h-full object-cover"
-              />
-            </div>
-          )}
+          <div
+            className="w-full h-full rounded"
+            draggable
+            onDragStart={() => handleDragStart(img)}
+          >
+            <Overlay
+              handleSelectImage={handleSelectImage}
+              id={img.id}
+              selectedImages={selectedImages}
+            />
+            <Image
+              src={img.url}
+              alt={`${index + 1} img`}
+              height={"100%"}
+              width={"100%"}
+              className="rounded cursor-pointer w-full h-full object-cover"
+            />
+          </div>
         </div>
       ))}
       <Dropzone />
