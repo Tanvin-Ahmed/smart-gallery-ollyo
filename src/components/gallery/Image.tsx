@@ -1,5 +1,5 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import placeholder from "../assets/placeholder/placeholder.jpg";
+import placeholder from "../../assets/placeholder/placeholder.jpg";
 import React, { MouseEventHandler } from "react";
 
 interface ImageProps {

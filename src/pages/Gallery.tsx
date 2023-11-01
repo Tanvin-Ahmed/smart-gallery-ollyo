@@ -1,36 +1,13 @@
-import { useEffect, useState } from "react";
-import DisplayImage from "../components/DisplayImage";
-import { getDataFromLocalStorage } from "../utils/localStorage";
-import Header from "../components/Header";
-import { ImageDataType } from "../types";
+import DisplayImage from "../components/gallery/DisplayImage";
+import Header from "../components/gallery/Header";
 
 const Gallery = () => {
-  const [images, setImages] = useState<ImageDataType[] | []>([]);
-  const [selectedImages, setSelectedImages] = useState<string[] | []>([]);
-
-  useEffect(() => {
-    const data = getDataFromLocalStorage("gallery");
-    if (data) {
-      setImages(data);
-    }
-  }, []);
-
   return (
-    <section className="container mx-auto">
-      <div className="p-5">
-        <Header
-          images={images}
-          setImages={setImages}
-          selectedImages={selectedImages}
-          setSelectedImages={setSelectedImages}
-        />
+    <section className="container mx-auto py-10">
+      <div className="p-5 bg-white rounded">
+        <Header />
         <hr className="text-gray-500 my-5 block" />
-        <DisplayImage
-          images={images}
-          setImages={setImages}
-          setSelectedImages={setSelectedImages}
-          selectedImages={selectedImages}
-        />
+        <DisplayImage />
       </div>
     </section>
   );
