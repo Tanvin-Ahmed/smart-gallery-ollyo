@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Trash, RefreshCcw } from "lucide-react";
 import { galleryData } from "../../utils/data";
 import { CreateGalleryContext } from "../../context/createGalleryContext";
+import Image from "./Image";
 
 const Header = () => {
   const { images, setImages, selectedImages, setSelectedImages } =
@@ -27,7 +28,14 @@ const Header = () => {
           Selected
         </h5>
       ) : (
-        <h5 className="text-3xl font-bold">Gallery</h5>
+        <div className="flex justify-center items-center gap-3">
+          <Image
+            src="/logo.png"
+            alt="logo"
+            className="rounded-full w-10 h-10 object-cover"
+          />
+          <h5 className="text-3xl font-bold">Smart Gallery</h5>
+        </div>
       )}
       <div className="flex justify-center items-center gap-3">
         <button

@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import Image from "./Image";
 import { ImageDataType } from "../../types";
 import Overlay from "./Overlay";
-import { v4 as uuidV4 } from "uuid";
 import { CreateGalleryContext } from "../../context/createGalleryContext";
 import Dropzone from "./Dropzone";
 
@@ -29,6 +28,7 @@ const DisplayImage = () => {
 
   const handleDragStart = (e: React.DragEvent, data: ImageDataType) => {
     if (e.dataTransfer) {
+      // save selected image data
       e.dataTransfer.setData("imageId", data.id);
       setDraggedImage(data);
     }
@@ -36,42 +36,25 @@ const DisplayImage = () => {
 
   const handleDragOver = (e: React.DragEvent, id: string) => {
     e.preventDefault();
-    if (id === draggedImage?.id) {
+    if (!draggedImage) return;
+
+    if (id !== draggedImage.id) {
+      // if selected image is dragged over another image position
       setImages((pre: ImageDataType[]) => {
         const images = [...pre];
-        return images.filter((img) => img.url !== "");
-      });
-    } else {
-      setImages((pre: ImageDataType[]) => {
-        let images = [...pre];
-        const index = images.findIndex((img) => img.id === id);
-        if (images[index].url === "") return images;
-        // remove if previous placeholder is exist (empty image)
-        images = images.filter((img) => img.url !== "");
-        // add new placeholder for new position (empty image)
-        images.splice(index, 0, { id: uuidV4(), url: "" });
+        const draggedIndex = images.findIndex(
+          (img) => img.id === draggedImage.id
+        );
+        const dropIndex = images.findIndex((img) => img.id === id);
+
+        // Remove the dragged image from the list
+        images.splice(draggedIndex, 1);
+
+        // Add the updated dragged image back at the new position
+        images.splice(dropIndex, 0, draggedImage);
+
         return images;
       });
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    const imgId = e.dataTransfer.getData("imageId");
-    const targetIndex = images.findIndex((img) => img.id === imgId);
-
-    if (targetIndex !== -1) {
-      // Create a copy of the images array
-      const updatedImages = [...images];
-      updatedImages.splice(targetIndex, 1);
-
-      // Remove the placeholder (empty image) if it exists
-      const placeholderIndex = updatedImages.findIndex((img) => img.url === "");
-      if (placeholderIndex !== -1) {
-        updatedImages.splice(placeholderIndex, 1, images[targetIndex]);
-      }
-
-      // Set the updated images array
-      setImages(updatedImages);
     }
   };
 
@@ -86,8 +69,6 @@ const DisplayImage = () => {
             img.url === "" && "scale-105 shadow-lg"
           }`}
           onDragOver={(e) => handleDragOver(e, img.id)}
-          // onDragLeave={() => handleDragLeave(img.id)}
-          onDrop={handleDrop}
         >
           {img.url && (
             <div
