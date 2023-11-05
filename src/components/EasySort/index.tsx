@@ -57,7 +57,7 @@ const SortableList = <
   // contains the container element
   const containerRef = React.useRef<HTMLElement | null>(null);
   // contains the target element (copy of the source element)
-  const targetRef = React.useRef<HTMLElement | null>(null);
+  const targetRef = React.useRef<HTMLElement | undefined>(undefined);
   // ! source element actual size
   const sourceElementActualInfoRef = React.useRef<{
     width: number;
@@ -141,7 +141,7 @@ const SortableList = <
       const holder = customHolderRef?.current || document.body;
       holder.appendChild(copy);
 
-      targetRef.current = copy;
+      return copy;
     },
     [customHolderRef, draggedItemClassName]
   );
@@ -172,7 +172,7 @@ const SortableList = <
       sourceIndexRef.current = sourceIndex;
 
       // the item being dragged is copied to the document body and will be used as the target
-      copyItem(sourceIndex);
+      targetRef.current = copyItem(sourceIndex);
 
       // hide source during the drag gesture
       const source = itemsRef.current[sourceIndex];
@@ -260,9 +260,6 @@ const SortableList = <
               currentItem.style.width = `${sourceElementActualInfoRef.current.width}px`;
             }
             // else if (newIndex === 0 && index === 1) {
-            //   // currentItem.style.position = `absolute`;
-            //   // currentItem.style.left = "41%";
-            //   // currentItem.style.top = "30%";
             //   currentItem.style.height = `${sourceElementActualInfoRef.current.height}px`;
             //   currentItem.style.width = `${sourceElementActualInfoRef.current.width}px`;
             // }
@@ -288,11 +285,8 @@ const SortableList = <
         const currentItem = itemsRef.current[index];
         currentItem.style.transform = "";
         currentItem.style.transitionDuration = "";
-        // if (currentItem.style.position === "absolute") {
-        //   currentItem.style.position = "relative";
-        //   currentItem.style.left = "0px";
-        //   currentItem.style.top = "0px";
-        // }
+        currentItem.style.width = "100%";
+        currentItem.style.height = "100%";
       }
 
       const sourceIndex = sourceIndexRef.current;
@@ -332,7 +326,7 @@ const SortableList = <
       if (targetRef.current) {
         const holder = customHolderRef?.current || document.body;
         holder.removeChild(targetRef.current);
-        targetRef.current = null;
+        targetRef.current = undefined;
       }
     },
   });

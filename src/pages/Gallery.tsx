@@ -1,5 +1,5 @@
-import ImageGrid from "../components/gallery/ImageGrid";
 import Header from "../components/gallery/Header";
+import DisplayImage from "../components/gallery/DisplayImage";
 
 const Gallery = () => {
   return (
@@ -7,8 +7,7 @@ const Gallery = () => {
       <div className="p-5 bg-white rounded">
         <Header />
         <hr className="text-gray-500 my-5 block" />
-        {/* <DisplayImage /> */}
-        <ImageGrid />
+        <DisplayImage />
       </div>
     </section>
   );
