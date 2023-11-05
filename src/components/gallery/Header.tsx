@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import { Trash, RefreshCcw } from "lucide-react";
-import { galleryData } from "../../utils/data";
+import { Trash } from "lucide-react";
 import { CreateGalleryContext } from "../../context/createGalleryContext";
 import Image from "./Image";
 
@@ -13,11 +12,6 @@ const Header = () => {
     const data = images.filter((image) => !selectedImagesId.includes(image.id));
     setImages(data);
     setSelectedImages([]);
-  };
-
-  const handleRefresh = () => {
-    const data = galleryData;
-    setImages(data);
   };
 
   return (
@@ -37,25 +31,16 @@ const Header = () => {
           <h5 className="text-3xl font-bold">Smart Gallery</h5>
         </div>
       )}
-      <div className="flex justify-center items-center gap-3">
+      {selectedImages.length > 0 && (
         <button
           type="button"
-          className="border-none bg-gray-100 transition-all hover:bg-gray-200 p-2 rounded-full"
-          onClick={handleRefresh}
+          className="rounded border-none bg-red-500 text-white py-2 px-4 flex justify-center items-center gap-x-3"
+          onClick={handleDelete}
         >
-          <RefreshCcw size={18} />
+          <Trash size={18} /> Delete {selectedImages.length}{" "}
+          {selectedImages.length > 1 ? "Files" : "File"}
         </button>
-        {selectedImages.length > 0 && (
-          <button
-            type="button"
-            className="rounded border-none bg-red-500 text-white py-2 px-4 flex justify-center items-center gap-x-3"
-            onClick={handleDelete}
-          >
-            <Trash size={18} /> Delete {selectedImages.length}{" "}
-            {selectedImages.length > 1 ? "Files" : "File"}
-          </button>
-        )}
-      </div>
+      )}
     </div>
   );
 };
