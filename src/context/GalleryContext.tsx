@@ -25,7 +25,7 @@ const GalleryContext: FC<GalleryContextProps> = ({ children }) => {
     }
   }, []);
 
-  // if data already doesn't exists in local storage then save in local storage and load in local state
+  // if data already not exists in local storage then save in local storage and load in local state
   useEffect(() => {
     if (!getDataFromLocalStorage("gallery")) {
       setDataInLocalStorage("gallery", galleryData);

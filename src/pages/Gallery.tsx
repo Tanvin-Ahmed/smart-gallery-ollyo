@@ -1,4 +1,4 @@
-import DisplayImage from "../components/gallery/DisplayImage";
+import ImageGrid from "../components/gallery/ImageGrid";
 import Header from "../components/gallery/Header";
 
 const Gallery = () => {
@@ -7,7 +7,8 @@ const Gallery = () => {
       <div className="p-5 bg-white rounded">
         <Header />
         <hr className="text-gray-500 my-5 block" />
-        <DisplayImage />
+        {/* <DisplayImage /> */}
+        <ImageGrid />
       </div>
     </section>
   );
